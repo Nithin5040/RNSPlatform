@@ -57,6 +57,8 @@ import {
   UserMinus,
   RotateCcw,
   Fingerprint,
+  Route,
+  CheckCircle2
 } from "lucide-react";
 import { FaChartLine } from "react-icons/fa";
 import axiosClient from "../../api/axiosClient";
@@ -206,7 +208,7 @@ export default function Sidebar({
     {
       path: "/assign-route",
       label: "Assign Route",
-      icon: <UserPlus size={20} />
+      icon: <Route size={20} />
     },
     // {
     //   path: "/route-monitoring",
@@ -221,12 +223,12 @@ export default function Sidebar({
     {
       path: "/completed-routes",
       label: "Completed Routes",
-      icon: <UserPlus size={20} />
+      icon: <CheckCircle2 size={20} />
     },
     {
       path: "/driver-profile",
       label: "Driver Details",
-      icon: <UserPlus size={20} />
+      icon: <User size={20} />
     },
 
   ];
