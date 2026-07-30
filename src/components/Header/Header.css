@@ -1,0 +1,650 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+
+/* ========== App Header ========== */
+.app-header {
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 60%, #3730a3 100%);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 70px;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(79, 70, 229, 0.25);
+  transition: all 0.3s ease;
+}
+
+/* Dark theme variant */
+.app-header.dark {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 60%, #020617 100%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid #334155;
+}
+
+/* ========== Header Container ========== */
+.header-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 100%;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* ========== Logo Section ========== */
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.header-logo:hover {
+  transform: scale(1.02);
+}
+
+.logo-image {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 6px;
+}
+
+.logo-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: brightness(0) invert(1); /* Makes logo white */
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.logo-subtitle {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.2;
+}
+
+/* Dark theme logo adjustments */
+.app-header.dark .logo-image {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* ========== Header Controls ========== */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ========== Date Time Display ========== */
+.datetime-display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 14px;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.datetime-display .date {
+  font-weight: 500;
+}
+
+.datetime-display .time {
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+/* ========== Theme Toggle Button ========== */
+.theme-toggle-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: rotate(20deg) scale(1.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+}
+
+.theme-toggle-btn:hover::before {
+  opacity: 1;
+}
+
+.theme-toggle-btn:active {
+  transform: rotate(20deg) scale(0.95);
+}
+
+/* ========== Auth Buttons ========== */
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.login-btn {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+
+
+/* Dark theme auth buttons */
+
+
+/* ========== User Dropdown ========== */
+.user-dropdown {
+  position: relative;
+  z-index: 100; /* Ensure dropdown is above other content */
+}
+
+/* Fix Glassmorphism Readability */
+.dropdown-menu {
+  background: white !important; /* Force solid background for readability */
+  backdrop-filter: none !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.app-header.dark .dropdown-menu {
+  background: #1f2937 !important; /* Solid dark background */
+}
+
+/* ========== User Button ========== */
+.user-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 4px 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #ffffff;
+}
+
+.user-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  transition: transform 0.3s ease;
+}
+
+.user-button:hover .user-avatar {
+  transform: scale(1.05);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.user-role {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.2;
+  text-transform: capitalize;
+}
+
+.dropdown-arrow {
+  color: rgba(255, 255, 255, 0.7);
+  transition: transform 0.3s ease;
+}
+
+.dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 280px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  z-index: 1100;
+  overflow: hidden;
+  animation: dropdownFadeIn 0.2s ease;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.app-header.dark .dropdown-menu {
+  background: #2a2a2a;
+  border-color: #333;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-header {
+  padding: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.app-header.dark .dropdown-header {
+  background: #333;
+  border-bottom-color: #444;
+}
+
+.dropdown-user {
+  display: flex;
+  gap: 12px;
+}
+
+.dropdown-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 18px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(59, 53, 201, 0.35);
+}
+
+.dropdown-user-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.app-header.dark .dropdown-user-name {
+  color: #fff;
+}
+
+.dropdown-user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-header.dark .dropdown-user-role {
+  color: #999;
+}
+
+.dropdown-user-role {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0 0 2px;
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-header.dark .dropdown-user-email {
+  color: #777;
+}
+
+.dropdown-user-email {
+  font-size: 11px;
+  color: #94a3b8;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-items {
+  padding: 8px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #475569;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  width: 100%;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dropdown-item:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  transform: translateX(5px);
+}
+
+.app-header.dark .dropdown-item {
+  color: #ccc;
+}
+
+.app-header.dark .dropdown-item:hover {
+  background: #333;
+  color: #fff;
+}
+
+.logout-item {
+  color: #ef4444;
+}
+
+.logout-item:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.app-header.dark .logout-item {
+  color: #ef4444;
+}
+
+.app-header.dark .logout-item:hover {
+  background: #3b1e1e;
+  color: #ff6b6b;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #e2e8f0;
+  margin: 4px 0;
+}
+
+.app-header.dark .dropdown-divider {
+  background: #333;
+}
+
+.auth-and-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-mobile-menu-btn {
+  display: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-mobile-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+
+/* ========== System Title ========== */
+.header-title-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 20px;
+  pointer-events: none; /* Allows logo and buttons to be clickable if they overlap slightly */
+}
+
+.header-system-title {
+  font-family: 'Outfit', 'Poppins', 'Segoe UI', sans-serif;
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 60%, #818cf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 8px rgba(79, 70, 229, 0.45));
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.full-title {
+  font-size: 22px;
+}
+
+.title-abbr {
+  font-size: 22px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 4px 14px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.short-title {
+  display: none;
+  font-size: 24px;
+}
+
+/* Intermediate scaling to prevent overlap */
+@media (max-width: 1200px) {
+  .full-title { font-size: 18px; }
+  .title-abbr { font-size: 18px; padding: 3px 10px; }
+}
+
+@media (max-width: 1024px) {
+  .title-abbr { display: none; }
+  .full-title { font-size: 16px; }
+  .header-logo .logo-text { display: none; } /* Hide logo text earlier to make room */
+}
+
+@media (max-width: 900px) {
+  .full-title { display: none; }
+  .short-title { display: block; }
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .app-header {
+    height: 60px;
+  }
+  
+  .header-container {
+    padding: 0 12px; /* Reduced padding on mobile */
+  }
+
+  .header-mobile-menu-btn {
+    display: flex;
+  }
+
+  .logo-image {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logo-text {
+    display: none; /* Hide text on mobile, show only logo */
+  }
+
+  .datetime-display {
+    padding: 4px 8px;
+    gap: 6px;
+    font-size: 11px;
+  }
+
+  .header-system-title .full-title {
+    display: none;
+  }
+
+  .header-system-title .title-abbr {
+    display: none;
+  }
+
+  .header-system-title .short-title {
+    display: block;
+    font-size: 18px; /* Slightly smaller to prevent overlap */
+  }
+
+  .header-title-container {
+    padding: 0 5px;
+  }
+
+  .datetime-display .date {
+    display: none; /* Hide date on mobile, show only time */
+  }
+
+  .datetime-display .time {
+    padding: 2px 6px;
+  }
+
+  .user-info {
+    display: none; /* Hide user info on mobile, show only avatar */
+  }
+
+  .user-button {
+    padding: 4px;
+  }
+
+  .dropdown-arrow {
+    display: none;
+  }
+
+  .auth-buttons {
+    gap: 8px;
+  }
+
+  .login-btn {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+}
+
+/* Extreme overcrowding fix for very small screens */
+@media (max-width: 480px) {
+  .header-controls {
+    gap: 8px;
+  }
+
+  .datetime-display {
+    display: none !important; /* Completely hide time on very small screens to give title room */
+  }
+
+  .header-system-title .short-title {
+    font-size: 16px;
+  }
+
+  .header-logo {
+    gap: 5px;
+  }
+}
+
+  .theme-toggle-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+/* Ensure content starts below header */
+body {
+  margin: 0;
+  padding-top: 70px;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding-top: 60px;
+  }
+}

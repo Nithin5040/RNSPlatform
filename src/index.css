@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/* Global Titanium Gray & Royal Indigo Theme Styles */
+body {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  font-family: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+body.dark {
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn .2s ease-in-out;
+}
+
+/* Login card logo background animations */
+@keyframes logoBgSpin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes logoBgPulse {
+  from { opacity: 0.04; transform: translate(-50%, -50%) rotate(var(--r, 0deg)) scale(0.85); }
+  to   { opacity: 0.12; transform: translate(-50%, -50%) rotate(var(--r, 0deg)) scale(1.1); }
+}

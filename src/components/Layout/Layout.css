@@ -1,0 +1,300 @@
+.layout {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+  transition: background 0.3s ease;
+  width: 100%;
+  position: relative;
+}
+
+/* Dark Theme - Titanium Slate Navy */
+.layout.dark {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+}
+
+.layout.dark .content-area {
+  background: transparent;
+}
+
+/* ========== Header - Fixed at top ========== */
+.layout .app-header {
+  flex-shrink: 0;
+  height: 70px;
+  z-index: 50;
+  width: 100%;
+}
+
+/* ========== Main Content Area ========== */
+.layout-main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  background: transparent;
+}
+
+.layout.dark .layout-main {
+  background: transparent;
+}
+
+/* ========== Desktop Sidebar ========== */
+.sidebar-desktop {
+  height: 100%;
+  flex-shrink: 0;
+  background-color: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  transition: width 0.3s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.layout.dark .sidebar-desktop {
+  background-color: #1e293b;
+  border-right: 1px solid #334155;
+}
+
+/* ========== Mobile Sidebar ========== */
+.sidebar-mobile {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 280px;
+  background-color: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 60;
+  overflow-y: auto;
+}
+
+.layout.dark .sidebar-mobile {
+  background-color: #1e293b;
+  border-right: 1px solid #334155;
+}
+
+.sidebar-mobile.open {
+  transform: translateX(0);
+}
+
+/* ========== Content Area ========== */
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+}
+
+.layout.dark .content-area {
+  background: transparent;
+}
+
+/* ========== Scrollable Content ========== */
+.content-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: transparent;
+  padding: 0;
+  width: 100%;
+}
+
+.layout.dark .content-scrollable {
+  background: transparent;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* ========== Footer - Full width across layout ========== */
+.layout .critical-footer,
+.critical-footer {
+  flex-shrink: 0;
+  width: 100%;
+  height: 48px;
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 60%, #3730a3 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  bottom: auto;
+  left: auto;
+  right: auto;
+  z-index: 50;
+}
+
+/* Dark theme for footer */
+.layout.dark .critical-footer,
+.critical-footer.dark {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-top: 1px solid #334155;
+}
+
+/* ========== Card/Table container ========== */
+.content-wrapper > * {
+  flex-shrink: 0;
+}
+
+.table-container,
+.card-container {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  padding: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.layout.dark .table-container,
+.layout.dark .card-container {
+  background: #1e293b;
+  border: 1px solid #334155;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Table wrapper to handle overflow */
+.table-responsive {
+  overflow-x: auto;
+  margin-bottom: 16px;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+/* ========== Global Responsive Grid ========== */
+.responsive-grid {
+  display: grid;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.responsive-grid-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.responsive-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.responsive-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.responsive-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.responsive-grid-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+@media (max-width: 1024px) {
+  .responsive-grid-5, .responsive-grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .responsive-grid-5, .responsive-grid-4, .responsive-grid-3, .responsive-grid-2 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
+
+/* ========== Mobile Overlay ========== */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  z-index: 55;
+  backdrop-filter: blur(4px);
+  animation: overlayFade 0.3s ease;
+}
+
+/* ========== Scrollbar Styling ========== */
+.content-scrollable::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.content-scrollable::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.content-scrollable::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.content-scrollable::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.layout.dark .content-scrollable::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.layout.dark .content-scrollable::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+.layout.dark .content-scrollable::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .layout .app-header {
+    height: 60px;
+  }
+
+  .sidebar-desktop {
+    display: none;
+  }
+
+  .content-wrapper {
+    padding: 16px;
+  }
+
+  .layout .critical-footer,
+  .critical-footer {
+    height: auto;
+    min-height: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-wrapper {
+    padding: 12px;
+  }
+
+  .layout .critical-footer,
+  .critical-footer {
+    min-height: 70px;
+  }
+}
+
+@media (min-width: 769px) {
+  .sidebar-mobile {
+    display: none;
+  }
+}
+
+/* ========== Global Reset ========== */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+@keyframes overlayFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
