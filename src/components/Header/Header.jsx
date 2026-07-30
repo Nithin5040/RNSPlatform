@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User, Settings, LogOut, ChevronDown, Menu, X, Sun, Moon } from "lucide-react";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/Logo.png";
 import vishvinLogo from "../../assets/Vishvin.png";
 import axiosClient from "../../api/axiosClient";
 import { SummaryApi } from "../../api/SummaryApi";
