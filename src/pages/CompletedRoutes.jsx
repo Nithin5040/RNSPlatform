@@ -26,10 +26,14 @@ import {
     ZoomOut,
     Maximize,
     Minimize,
-    FolderOpen
+    FolderOpen,
+    BarChart3,
+    FileSpreadsheet,
+    Printer
 } from "lucide-react";
 import axiosClient from "../api/axiosClient";
 import { SummaryApi } from "../api/SummaryApi";
+import * as XLSX from 'xlsx';
 
 // Image Viewer Modal Component
 function ImageViewerModal({
@@ -88,10 +92,8 @@ function ImageViewerModal({
         setZoom(1);
     };
 
-    // Calculate the appropriate zoom to fit the image to screen
     const getFitZoom = () => {
         if (!fitToScreen) return zoom;
-        // Calculate zoom to fit image in container
         const containerWidth = window.innerWidth * 0.85;
         const containerHeight = window.innerHeight * 0.7;
         if (imageDimensions.width > 0 && imageDimensions.height > 0) {
@@ -163,7 +165,7 @@ function ImageViewerModal({
                                 width: "36px",
                                 height: "36px",
                                 borderRadius: "8px",
-                                background: darkMode ? "#4f46e5" : "#4f46e5",
+                                background: "#4f46e5",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -173,14 +175,12 @@ function ImageViewerModal({
                             <ImageIcon size={18} color="#ffffff" />
                         </div>
                         <div style={{ minWidth: 0 }}>
-                            <h3 style={{ fontSize: "16px", fontWeight: "700", color: textColor, margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                            <h3 style={{ fontSize: "16px", fontWeight: "700", color: textColor, margin: 0 }}>
                                 Image Viewer
                             </h3>
-                            <p style={{ fontSize: "12px", color: subTextColor, margin: "2px 0 0 0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                            <p style={{ fontSize: "12px", color: subTextColor, margin: "2px 0 0 0" }}>
                                 {fileName || 'Document Image'}
-                                {imageDimensions.width > 0 && (
-                                    ` • ${imageDimensions.width} × ${imageDimensions.height}`
-                                )}
+                                {imageDimensions.width > 0 && ` • ${imageDimensions.width} × ${imageDimensions.height}`}
                             </p>
                         </div>
                     </div>
@@ -199,20 +199,8 @@ function ImageViewerModal({
                                 color: fitToScreen ? "#4f46e5" : textColor,
                                 fontSize: "11px",
                                 fontWeight: "600",
-                                cursor: "pointer",
-                                transition: "all 0.2s ease"
+                                cursor: "pointer"
                             }}
-                            onMouseEnter={(e) => {
-                                if (!fitToScreen) {
-                                    e.currentTarget.style.background = darkMode ? "rgba(255,255,255,0.1)" : "#e2e8f0";
-                                }
-                            }}
-                            onMouseLeave={(e) => {
-                                if (!fitToScreen) {
-                                    e.currentTarget.style.background = darkMode ? "rgba(255,255,255,0.05)" : "#f1f5f9";
-                                }
-                            }}
-                            title="Fit to Screen"
                         >
                             Fit to Screen
                         </button>
@@ -228,16 +216,8 @@ function ImageViewerModal({
                                 background: darkMode ? "rgba(255,255,255,0.05)" : "#f1f5f9",
                                 border: `1px solid ${borderColor}`,
                                 color: textColor,
-                                cursor: "pointer",
-                                transition: "all 0.2s ease"
+                                cursor: "pointer"
                             }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = darkMode ? "rgba(255,255,255,0.1)" : "#e2e8f0";
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = darkMode ? "rgba(255,255,255,0.05)" : "#f1f5f9";
-                            }}
-                            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
                         >
                             {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
                         </button>
@@ -253,14 +233,7 @@ function ImageViewerModal({
                                 background: darkMode ? "rgba(255,255,255,0.05)" : "#f1f5f9",
                                 border: `1px solid ${borderColor}`,
                                 color: textColor,
-                                cursor: "pointer",
-                                transition: "all 0.2s ease"
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = darkMode ? "rgba(255,255,255,0.1)" : "#e2e8f0";
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = darkMode ? "rgba(255,255,255,0.05)" : "#f1f5f9";
+                                cursor: "pointer"
                             }}
                         >
                             <X size={18} />
@@ -275,8 +248,7 @@ function ImageViewerModal({
                         justifyContent: "center",
                         gap: "8px",
                         marginBottom: "12px",
-                        flexWrap: "wrap",
-                        flexShrink: 0
+                        flexWrap: "wrap"
                     }}
                 >
                     <button
@@ -292,18 +264,10 @@ function ImageViewerModal({
                             color: textColor,
                             fontSize: "12px",
                             fontWeight: "500",
-                            cursor: "pointer",
-                            transition: "all 0.2s ease"
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.background = darkMode ? "rgba(255,255,255,0.1)" : "#e2e8f0";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.background = darkMode ? "rgba(255,255,255,0.05)" : "#f1f5f9";
+                            cursor: "pointer"
                         }}
                     >
-                        <ZoomIn size={14} />
-                        Zoom In
+                        <ZoomIn size={14} /> Zoom In
                     </button>
                     <button
                         onClick={handleZoomOut}
@@ -318,18 +282,10 @@ function ImageViewerModal({
                             color: textColor,
                             fontSize: "12px",
                             fontWeight: "500",
-                            cursor: "pointer",
-                            transition: "all 0.2s ease"
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.background = darkMode ? "rgba(255,255,255,0.1)" : "#e2e8f0";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.background = darkMode ? "rgba(255,255,255,0.05)" : "#f1f5f9";
+                            cursor: "pointer"
                         }}
                     >
-                        <ZoomOut size={14} />
-                        Zoom Out
+                        <ZoomOut size={14} /> Zoom Out
                     </button>
                     <button
                         onClick={handleRotate}
@@ -344,14 +300,7 @@ function ImageViewerModal({
                             color: textColor,
                             fontSize: "12px",
                             fontWeight: "500",
-                            cursor: "pointer",
-                            transition: "all 0.2s ease"
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.background = darkMode ? "rgba(255,255,255,0.1)" : "#e2e8f0";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.background = darkMode ? "rgba(255,255,255,0.05)" : "#f1f5f9";
+                            cursor: "pointer"
                         }}
                     >
                         <svg
@@ -361,8 +310,6 @@ function ImageViewerModal({
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
                         >
                             <path d="M21 12a9 9 0 1 1-6.219-8.56" />
                             <polyline points="21 3 21 9 15 9" />
@@ -382,14 +329,7 @@ function ImageViewerModal({
                             color: textColor,
                             fontSize: "12px",
                             fontWeight: "500",
-                            cursor: "pointer",
-                            transition: "all 0.2s ease"
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.background = darkMode ? "rgba(255,255,255,0.1)" : "#e2e8f0";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.background = darkMode ? "rgba(255,255,255,0.05)" : "#f1f5f9";
+                            cursor: "pointer"
                         }}
                     >
                         Reset
@@ -420,7 +360,6 @@ function ImageViewerModal({
                         background: darkMode ? "#0f172a" : "#f1f5f9",
                         borderRadius: "8px",
                         overflow: "auto",
-                        position: "relative",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center"
@@ -434,8 +373,6 @@ function ImageViewerModal({
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                overflow: "auto",
-                                position: "relative",
                                 padding: "20px"
                             }}
                         >
@@ -446,8 +383,6 @@ function ImageViewerModal({
                                 style={{
                                     maxWidth: "100%",
                                     maxHeight: "100%",
-                                    width: "auto",
-                                    height: "auto",
                                     objectFit: "contain",
                                     transform: `scale(${displayZoom}) rotate(${rotation}deg)`,
                                     transition: "transform 0.3s ease",
@@ -460,16 +395,7 @@ function ImageViewerModal({
                             />
                         </div>
                     ) : (
-                        <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                height: "100%",
-                                color: subTextColor
-                            }}
-                        >
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", color: subTextColor }}>
                             <ImageIcon size={48} style={{ marginBottom: "16px" }} />
                             <p>No image available</p>
                         </div>
@@ -484,8 +410,7 @@ function ImageViewerModal({
                         gap: "12px",
                         marginTop: "16px",
                         paddingTop: "12px",
-                        borderTop: `1px solid ${borderColor}`,
-                        flexShrink: 0
+                        borderTop: `1px solid ${borderColor}`
                     }}
                 >
                     <button
@@ -498,14 +423,7 @@ function ImageViewerModal({
                             color: subTextColor,
                             fontSize: "13px",
                             fontWeight: "500",
-                            cursor: "pointer",
-                            transition: "all 0.2s ease"
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.background = darkMode ? "rgba(255,255,255,0.05)" : "#f1f5f9";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.background = "transparent";
+                            cursor: "pointer"
                         }}
                     >
                         Close
@@ -525,18 +443,10 @@ function ImageViewerModal({
                                 fontSize: "13px",
                                 fontWeight: "600",
                                 textDecoration: "none",
-                                cursor: "pointer",
-                                transition: "all 0.2s ease"
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = "#6366f1";
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = "#4f46e5";
+                                cursor: "pointer"
                             }}
                         >
-                            <Download size={16} />
-                            Download
+                            <Download size={16} /> Download
                         </a>
                     )}
                 </div>
@@ -564,6 +474,7 @@ export default function CompletedRoutes() {
     const [error, setError] = useState(null);
     const [selectedRoute, setSelectedRoute] = useState(null);
     const [routeStations, setRouteStations] = useState([]);
+    const [routeStats, setRouteStats] = useState(null);
     const [showStationsModal, setShowStationsModal] = useState(false);
     const [showImageModal, setShowImageModal] = useState(false);
     const [imageUrl, setImageUrl] = useState(null);
@@ -571,8 +482,8 @@ export default function CompletedRoutes() {
     const [loadingImage, setLoadingImage] = useState(false);
     const [selectedStation, setSelectedStation] = useState(null);
     const [showFilesModal, setShowFilesModal] = useState(false);
+    const [exporting, setExporting] = useState(false);
 
-    // Fetch completed routes
     useEffect(() => {
         fetchCompletedRoutes();
     }, []);
@@ -620,26 +531,13 @@ export default function CompletedRoutes() {
             console.log("Route Stations Response:", response.data);
 
             if (response.data?.status === true) {
-                // Map the response to use camelCase keys
-                const mappedStations = response.data.result.map(station => ({
-                    routeStationStatusId: station.routeStationStatusId,
-                    statusId: station.statusId,
-                    visitedAt: station.visitedAt,
-                    stationSubmissionId: station.stationSubmissionId,
-                    remarks: station.remarks,
-                    excelDataId: station.excelDataId,
-                    taluk: station.taluk,
-                    station: station.station,
-                    voltageClass: station.voltageClass,
-                    inChargeAEJEName: station.inChargeAEJEName,
-                    contactNumber: station.contactNumber,
-                    subStationAddress: station.subStationAddress,
-                    pinCode: station.pinCode,
-                    latitude: station.latitude,
-                    longitude: station.longitude,
-                    files: station.files || []
-                }));
-                setRouteStations(mappedStations);
+                const result = response.data.result;
+                setRouteStations(result.stations || []);
+                setRouteStats({
+                    totalSubStationCount: result.totalSubStationCount || 0,
+                    uploadedCount: result.uploadedCount || 0,
+                    remainingCount: result.remainingCount || 0
+                });
                 setShowStationsModal(true);
             } else {
                 throw new Error(response.data?.message || "Failed to fetch route stations");
@@ -672,7 +570,6 @@ export default function CompletedRoutes() {
                 responseType: 'blob'
             });
 
-            // Create a URL for the blob
             const blob = new Blob([response.data], {
                 type: response.headers?.['content-type'] || 'image/png'
             });
@@ -689,6 +586,136 @@ export default function CompletedRoutes() {
         } finally {
             setLoadingImage(false);
         }
+    };
+
+    // Export main table to Excel
+    const handleExportToExcel = () => {
+        try {
+            setExporting(true);
+
+            const exportData = completedRoutes.map((route, index) => ({
+                'S.No': index + 1,
+                'Driver Name': route.DriverName || 'N/A',
+                'Mobile Number': route.MobileNumber || 'N/A',
+                'Truck Number': route.TruckNumber || 'N/A',
+                'Zone': route.ZoneMasterName || 'N/A',
+                'Route Plan': route.RoutePlanPoint || 'N/A',
+                'Completed At': formatDate(route.CompletedAt)
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const colWidths = [
+                { wch: 6 }, { wch: 20 }, { wch: 15 },
+                { wch: 15 }, { wch: 15 }, { wch: 15 }, { wch: 20 }
+            ];
+            ws['!cols'] = colWidths;
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Completed Routes");
+
+            const date = new Date();
+            const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            const fileName = `Completed_Routes_${dateStr}.xlsx`;
+
+            XLSX.writeFile(wb, fileName);
+
+        } catch (error) {
+            console.error("Error exporting to Excel:", error);
+            alert("Failed to export data. Please try again.");
+        } finally {
+            setExporting(false);
+        }
+    };
+
+    const handleExportRouteDetails = () => {
+        try {
+            if (!selectedRoute || !routeStations.length) return;
+
+            // Calculate driver completion statistics
+            const totalStations = routeStations.length;
+            const completedStations = routeStations.filter(s => s.statusId === 3 || s.remarks?.toLowerCase() === 'completed').length;
+            const pendingStations = totalStations - completedStations;
+
+            // Route Summary Sheet with driver performance
+            const summaryData = [{
+                'Driver Name': selectedRoute.DriverName || 'N/A',
+                'Mobile Number': selectedRoute.MobileNumber || 'N/A',
+                'Truck Number': selectedRoute.TruckNumber || 'N/A',
+                'Zone': selectedRoute.ZoneMasterName || 'N/A',
+                'Route Plan': selectedRoute.RoutePlanPoint || 'N/A',
+                'Route Completed At': formatDate(selectedRoute.CompletedAt),
+                'Total Stations Assigned': totalStations,
+                'Stations Completed by Driver': completedStations,
+                'Stations Pending': pendingStations,
+                'Driver Completion Rate': `${totalStations > 0 ? Math.round((completedStations / totalStations) * 100) : 0}%`,
+                'Total Files Uploaded': routeStats?.uploadedCount || 0,
+                'Files Pending': routeStats?.remainingCount || 0
+            }];
+
+            // Stations Detail Sheet with driver completion status for each station
+            const stationsData = routeStations.map((station, index) => {
+                const isCompleted = station.statusId === 3 || station.remarks?.toLowerCase() === 'completed';
+                return {
+                    'S.No': index + 1,
+                    'Station Name': station.station || 'N/A',
+                    'Substation Address': station.subStationAddress || 'N/A',
+                    'Taluk': station.taluk || 'N/A',
+                    'Voltage Class': station.voltageClass || 'N/A',
+                    'Pin Code': station.pinCode || 'N/A',
+                    'In Charge': station.inChargeAEJEName || 'N/A',
+                    'Contact Number': station.contactNumber || 'N/A',
+                    'Latitude': station.latitude || 'N/A',
+                    'Longitude': station.longitude || 'N/A',
+                    'Visited At (Completed Time)': isCompleted ? formatDate(station.visitedAt) : 'Not Completed',
+                    'Driver Status': isCompleted ? 'Completed ✓' : 'Pending',
+                    'Remarks': station.remarks || 'N/A',
+                    'Files Uploaded': station.files?.length || 0,
+                    'Files Status': station.files?.length > 0 ? 'Uploaded' : 'No Files'
+                };
+            });
+
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+
+            // Summary sheet with driver performance
+            const wsSummary = XLSX.utils.json_to_sheet(summaryData);
+            const summaryColWidths = [
+                { wch: 20 }, { wch: 15 }, { wch: 15 }, { wch: 15 },
+                { wch: 15 }, { wch: 22 }, { wch: 20 }, { wch: 22 },
+                { wch: 18 }, { wch: 20 }, { wch: 18 }, { wch: 15 }
+            ];
+            wsSummary['!cols'] = summaryColWidths;
+
+            XLSX.utils.book_append_sheet(wb, wsSummary, "Driver Summary");
+
+            // Stations sheet with driver completion details
+            const wsStations = XLSX.utils.json_to_sheet(stationsData);
+            const stationsColWidths = [
+                { wch: 6 }, { wch: 25 }, { wch: 50 }, { wch: 15 },
+                { wch: 15 }, { wch: 10 }, { wch: 20 }, { wch: 25 },
+                { wch: 15 }, { wch: 15 }, { wch: 25 }, { wch: 15 },
+                { wch: 15 }, { wch: 15 }, { wch: 15 }
+            ];
+            wsStations['!cols'] = stationsColWidths;
+
+            XLSX.utils.book_append_sheet(wb, wsStations, "Station Details");
+
+            // Generate filename
+            const date = new Date();
+            const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            const fileName = `Driver_Report_${selectedRoute.DriverName}_${dateStr}.xlsx`;
+
+            XLSX.writeFile(wb, fileName);
+
+        } catch (error) {
+            console.error("Error exporting route details:", error);
+            alert("Failed to export route details. Please try again.");
+        }
+    };
+
+    // Print / Export PDF
+    const handleExportToPDF = () => {
+        window.print();
     };
 
     const formatDate = (dateString) => {
@@ -782,8 +809,21 @@ export default function CompletedRoutes() {
                 transition: "all 0.3s ease"
             }}
         >
+            {/* Print Styles */}
+            <style>
+                {`
+                    @media print {
+                        body * { visibility: hidden; }
+                        .print-section, .print-section * { visibility: visible; }
+                        .print-section { position: absolute; left: 0; top: 0; width: 100%; }
+                        .no-print { display: none !important; }
+                    }
+                `}
+            </style>
+
             {/* PAGE HEADER */}
             <div
+                className="no-print"
                 style={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -813,26 +853,112 @@ export default function CompletedRoutes() {
                     </p>
                 </div>
 
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                        background: darkMode ? "rgba(16, 185, 129, 0.15)" : "#d1fae5",
-                        padding: "6px 14px",
-                        borderRadius: "10px",
-                        border: darkMode ? "1px solid rgba(16, 185, 129, 0.3)" : "1px solid #6ee7b7"
-                    }}
-                >
-                    <CheckCircle2 size={16} color="#10b981" />
-                    <span style={{ fontSize: "12px", fontWeight: "600", color: "#10b981" }}>
-                        {completedRoutes.length} Routes Completed
-                    </span>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                    <div
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                            background: darkMode ? "rgba(16, 185, 129, 0.15)" : "#d1fae5",
+                            padding: "6px 14px",
+                            borderRadius: "10px",
+                            border: darkMode ? "1px solid rgba(16, 185, 129, 0.3)" : "1px solid #6ee7b7"
+                        }}
+                    >
+                        <CheckCircle2 size={16} color="#10b981" />
+                        <span style={{ fontSize: "12px", fontWeight: "600", color: "#10b981" }}>
+                            {completedRoutes.length} Routes Completed
+                        </span>
+                    </div>
+
+                    {/* Export Buttons */}
+                    <div style={{ display: "flex", gap: "8px" }}>
+                        <button
+                            onClick={handleExportToExcel}
+                            disabled={exporting || completedRoutes.length === 0}
+                            style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "8px",
+                                padding: "8px 16px",
+                                borderRadius: "8px",
+                                background: exporting ? "#94a3b8" : "#10b981",
+                                border: "none",
+                                color: "#ffffff",
+                                fontSize: "12px",
+                                fontWeight: "600",
+                                cursor: exporting || completedRoutes.length === 0 ? "not-allowed" : "pointer",
+                                transition: "all 0.2s ease",
+                                opacity: completedRoutes.length === 0 ? 0.5 : 1
+                            }}
+                            onMouseEnter={(e) => {
+                                if (!exporting && completedRoutes.length > 0) {
+                                    e.currentTarget.style.background = "#059669";
+                                    e.currentTarget.style.transform = "scale(1.05)";
+                                }
+                            }}
+                            onMouseLeave={(e) => {
+                                if (!exporting && completedRoutes.length > 0) {
+                                    e.currentTarget.style.background = "#10b981";
+                                    e.currentTarget.style.transform = "scale(1)";
+                                }
+                            }}
+                            title="Export to Excel"
+                        >
+                            {exporting ? (
+                                <>
+                                    <Loader2 size={14} className="animate-spin" />
+                                    Exporting...
+                                </>
+                            ) : (
+                                <>
+                                    <FileSpreadsheet size={16} />
+                                    Excel
+                                </>
+                            )}
+                        </button>
+                        <button
+                            onClick={handleExportToPDF}
+                            disabled={completedRoutes.length === 0}
+                            style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "8px",
+                                padding: "8px 16px",
+                                borderRadius: "8px",
+                                background: "#4f46e5",
+                                border: "none",
+                                color: "#ffffff",
+                                fontSize: "12px",
+                                fontWeight: "600",
+                                cursor: completedRoutes.length === 0 ? "not-allowed" : "pointer",
+                                transition: "all 0.2s ease",
+                                opacity: completedRoutes.length === 0 ? 0.5 : 1
+                            }}
+                            onMouseEnter={(e) => {
+                                if (completedRoutes.length > 0) {
+                                    e.currentTarget.style.background = "#6366f1";
+                                    e.currentTarget.style.transform = "scale(1.05)";
+                                }
+                            }}
+                            onMouseLeave={(e) => {
+                                if (completedRoutes.length > 0) {
+                                    e.currentTarget.style.background = "#4f46e5";
+                                    e.currentTarget.style.transform = "scale(1)";
+                                }
+                            }}
+                            title="Print / Export to PDF"
+                        >
+                            <Printer size={16} />
+                            Print
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            {/* Table */}
+            {/* Main Table */}
             <div
+                className="print-section"
                 style={{
                     background: containerBg,
                     borderRadius: "12px",
@@ -938,7 +1064,7 @@ export default function CompletedRoutes() {
                                     }}>
                                         Completed At
                                     </th>
-                                    <th style={{
+                                    <th className="no-print" style={{
                                         padding: "12px 16px",
                                         textAlign: "center",
                                         color: subTextColor,
@@ -1018,7 +1144,7 @@ export default function CompletedRoutes() {
                                                 {formatDate(route.CompletedAt)}
                                             </div>
                                         </td>
-                                        <td style={{ padding: "12px 16px", textAlign: "center" }}>
+                                        <td className="no-print" style={{ padding: "12px 16px", textAlign: "center" }}>
                                             <button
                                                 onClick={() => handleViewStations(route)}
                                                 style={{
@@ -1080,6 +1206,7 @@ export default function CompletedRoutes() {
                         onClick={() => {
                             setShowStationsModal(false);
                             setSelectedStation(null);
+                            setRouteStats(null);
                         }}
                     >
                         <motion.div
@@ -1090,7 +1217,7 @@ export default function CompletedRoutes() {
                                 background: containerBg,
                                 borderRadius: "16px",
                                 padding: "32px",
-                                maxWidth: "1200px",
+                                maxWidth: "1400px",
                                 width: "100%",
                                 maxHeight: "85vh",
                                 overflow: "auto",
@@ -1133,27 +1260,137 @@ export default function CompletedRoutes() {
                                         </div>
                                     </div>
                                 </div>
-                                <button
-                                    onClick={() => {
-                                        setShowStationsModal(false);
-                                        setSelectedStation(null);
-                                    }}
+                                <div style={{ display: "flex", gap: "8px" }}>
+                                    <button
+                                        onClick={handleExportRouteDetails}
+                                        style={{
+                                            display: "inline-flex",
+                                            alignItems: "center",
+                                            gap: "6px",
+                                            padding: "8px 16px",
+                                            borderRadius: "8px",
+                                            background: "#10b981",
+                                            border: "none",
+                                            color: "#ffffff",
+                                            fontSize: "12px",
+                                            fontWeight: "600",
+                                            cursor: "pointer",
+                                            transition: "all 0.2s ease"
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.background = "#059669";
+                                            e.currentTarget.style.transform = "scale(1.05)";
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.background = "#10b981";
+                                            e.currentTarget.style.transform = "scale(1)";
+                                        }}
+                                    >
+                                        <FileSpreadsheet size={14} />
+                                        Export Excel
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setShowStationsModal(false);
+                                            setSelectedStation(null);
+                                            setRouteStats(null);
+                                        }}
+                                        style={{
+                                            background: darkMode ? "rgba(255,255,255,0.05)" : "#f1f5f9",
+                                            border: "none",
+                                            borderRadius: "50%",
+                                            width: "36px",
+                                            height: "36px",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            cursor: "pointer",
+                                            color: textColor
+                                        }}
+                                    >
+                                        <X size={20} />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Statistics Cards */}
+                            {routeStats && (
+                                <div
                                     style={{
-                                        background: darkMode ? "rgba(255,255,255,0.05)" : "#f1f5f9",
-                                        border: "none",
-                                        borderRadius: "50%",
-                                        width: "36px",
-                                        height: "36px",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        cursor: "pointer",
-                                        color: textColor
+                                        display: "grid",
+                                        gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+                                        gap: "12px",
+                                        marginBottom: "24px"
                                     }}
                                 >
-                                    <X size={20} />
-                                </button>
-                            </div>
+                                    <div
+                                        style={{
+                                            padding: "16px",
+                                            borderRadius: "10px",
+                                            background: darkMode ? "rgba(59, 130, 246, 0.1)" : "#eff6ff",
+                                            border: `1px solid ${darkMode ? "rgba(59, 130, 246, 0.3)" : "#bfdbfe"}`,
+                                            textAlign: "center"
+                                        }}
+                                    >
+                                        <div style={{ fontSize: "24px", fontWeight: "700", color: "#3b82f6" }}>
+                                            {routeStats.totalSubStationCount}
+                                        </div>
+                                        <div style={{ fontSize: "11px", color: subTextColor, fontWeight: "500", marginTop: "4px" }}>
+                                            Total Stations
+                                        </div>
+                                    </div>
+                                    <div
+                                        style={{
+                                            padding: "16px",
+                                            borderRadius: "10px",
+                                            background: darkMode ? "rgba(16, 185, 129, 0.1)" : "#f0fdf4",
+                                            border: `1px solid ${darkMode ? "rgba(16, 185, 129, 0.3)" : "#bbf7d0"}`,
+                                            textAlign: "center"
+                                        }}
+                                    >
+                                        <div style={{ fontSize: "24px", fontWeight: "700", color: "#10b981" }}>
+                                            {routeStats.uploadedCount}
+                                        </div>
+                                        <div style={{ fontSize: "11px", color: subTextColor, fontWeight: "500", marginTop: "4px" }}>
+                                            Uploaded
+                                        </div>
+                                    </div>
+                                    <div
+                                        style={{
+                                            padding: "16px",
+                                            borderRadius: "10px",
+                                            background: darkMode ? "rgba(245, 158, 11, 0.1)" : "#fffbeb",
+                                            border: `1px solid ${darkMode ? "rgba(245, 158, 11, 0.3)" : "#fde68a"}`,
+                                            textAlign: "center"
+                                        }}
+                                    >
+                                        <div style={{ fontSize: "24px", fontWeight: "700", color: "#f59e0b" }}>
+                                            {routeStats.remainingCount}
+                                        </div>
+                                        <div style={{ fontSize: "11px", color: subTextColor, fontWeight: "500", marginTop: "4px" }}>
+                                            Remaining
+                                        </div>
+                                    </div>
+                                    <div
+                                        style={{
+                                            padding: "16px",
+                                            borderRadius: "10px",
+                                            background: darkMode ? "rgba(99, 102, 241, 0.1)" : "#eef2ff",
+                                            border: `1px solid ${darkMode ? "rgba(99, 102, 241, 0.3)" : "#c7d2fe"}`,
+                                            textAlign: "center"
+                                        }}
+                                    >
+                                        <div style={{ fontSize: "24px", fontWeight: "700", color: "#4f46e5" }}>
+                                            {routeStats.totalSubStationCount > 0
+                                                ? Math.round((routeStats.uploadedCount / routeStats.totalSubStationCount) * 100)
+                                                : 0}%
+                                        </div>
+                                        <div style={{ fontSize: "11px", color: subTextColor, fontWeight: "500", marginTop: "4px" }}>
+                                            Completion
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Stations Table */}
                             {routeStations.length === 0 ? (
@@ -1197,6 +1434,17 @@ export default function CompletedRoutes() {
                                                     letterSpacing: "0.5px"
                                                 }}>
                                                     Station Name
+                                                </th>
+                                                <th style={{
+                                                    padding: "12px 16px",
+                                                    textAlign: "left",
+                                                    color: subTextColor,
+                                                    fontWeight: "600",
+                                                    fontSize: "11px",
+                                                    textTransform: "uppercase",
+                                                    letterSpacing: "0.5px"
+                                                }}>
+                                                    Substation Address
                                                 </th>
                                                 <th style={{
                                                     padding: "12px 16px",
@@ -1251,7 +1499,18 @@ export default function CompletedRoutes() {
                                                     textTransform: "uppercase",
                                                     letterSpacing: "0.5px"
                                                 }}>
-                                                    Visited At
+                                                    Completed At
+                                                </th>
+                                                <th style={{
+                                                    padding: "12px 16px",
+                                                    textAlign: "left",
+                                                    color: subTextColor,
+                                                    fontWeight: "600",
+                                                    fontSize: "11px",
+                                                    textTransform: "uppercase",
+                                                    letterSpacing: "0.5px"
+                                                }}>
+                                                    Status
                                                 </th>
                                                 <th style={{
                                                     padding: "12px 16px",
@@ -1291,7 +1550,24 @@ export default function CompletedRoutes() {
                                                         color: textColor,
                                                         fontWeight: "500"
                                                     }}>
-                                                        {station.station || 'N/A'}
+                                                        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                                            <MapPin size={14} color="#10b981" />
+                                                            {station.station || 'N/A'}
+                                                        </div>
+                                                    </td>
+                                                    <td style={{
+                                                        padding: "12px 16px",
+                                                        color: subTextColor,
+                                                        maxWidth: "300px"
+                                                    }}>
+                                                        <div style={{
+                                                            whiteSpace: "nowrap",
+                                                            overflow: "hidden",
+                                                            textOverflow: "ellipsis",
+                                                            maxWidth: "300px"
+                                                        }}>
+                                                            {station.subStationAddress || 'N/A'}
+                                                        </div>
                                                     </td>
                                                     <td style={{
                                                         padding: "12px 16px",
@@ -1321,7 +1597,18 @@ export default function CompletedRoutes() {
                                                         padding: "12px 16px",
                                                         color: subTextColor
                                                     }}>
-                                                        {formatDate(station.visitedAt)}
+                                                        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                                            <Calendar size={14} color={subTextColor} />
+                                                            {formatDate(station.visitedAt)}
+                                                        </div>
+                                                    </td>
+                                                    <td style={{ padding: "12px 16px" }}>
+                                                        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                                            <CheckCircle2 size={16} color="#10b981" />
+                                                            <span style={{ color: "#10b981", fontSize: "12px", fontWeight: "500" }}>
+                                                                {station.remarks || 'Completed'}
+                                                            </span>
+                                                        </div>
                                                     </td>
                                                     <td style={{ padding: "12px 16px", textAlign: "center" }}>
                                                         {station.files && station.files.length > 0 ? (
